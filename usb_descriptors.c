@@ -10,45 +10,49 @@
  */
 #define _PID_MAP(itf, n) ((CFG_TUD_##itf) << (n))
 
-// Invoked when received GET DEVICE DESCRIPTOR
-// Application return pointer to descriptor
+/* Invoked when received GET DEVICE DESCRIPTOR.
+ * Application return pointer to descriptor
+ * */
 uint8_t const *tud_descriptor_device_cb(void) {
 	return (uint8_t const *)&xinput_device_descriptor;
 }
 
-//--------------------------------------------------------------------+
-// HID Report Descriptor
-//--------------------------------------------------------------------+
+/* --------------------------------------------------------------------+ */
+/* HID Report Descriptor */
+/* --------------------------------------------------------------------+ */
 
-// Invoked when received GET HID REPORT DESCRIPTOR
-// Application return pointer to descriptor
-// Descriptor contents must exist long enough for transfer to complete
+/* Invoked when received GET HID REPORT DESCRIPTOR.
+ * Application return pointer to descriptor.
+ * Descriptor contents must exist long enough for transfer to complete
+ * */
 uint8_t const *tud_hid_descriptor_report_cb(void) {
 	return 0;
 }
 
-//--------------------------------------------------------------------+
-// Configuration Descriptor
-//--------------------------------------------------------------------+
+/* --------------------------------------------------------------------+ */
+/* Configuration Descriptor */
+/* --------------------------------------------------------------------+ */
 
-// Invoked when received GET CONFIGURATION DESCRIPTOR
-// Application return pointer to descriptor
-// Descriptor contents must exist long enough for transfer to complete
+/* Invoked when received GET CONFIGURATION DESCRIPTOR.
+ * Application return pointer to descriptor.
+ * Descriptor contents must exist long enough for transfer to complete
+ * */
 uint8_t const *tud_descriptor_configuration_cb(uint8_t index) {
-	(void)index; // for multiple configurations
+	(void)index;
+
 	return xinput_configuration_descriptor;
-	return 0;
 }
 
-//--------------------------------------------------------------------+
-// String Descriptors
-//--------------------------------------------------------------------+
+/* --------------------------------------------------------------------+ */
+/* String Descriptors */
+/* --------------------------------------------------------------------+ */
 
 static uint16_t _desc_str[32];
 
-// Invoked when received GET STRING DESCRIPTOR request
-// Application return pointer to descriptor, whose contents must exist long
-// enough for transfer to complete
+/* Invoked when received GET STRING DESCRIPTOR request.
+ * Application return pointer to descriptor,
+ * whose contents must exist long enough for transfer to complete
+ * */
 uint16_t const *tud_descriptor_string_cb(uint8_t index, uint16_t langid) {
 
 	(void)langid;
@@ -59,13 +63,13 @@ uint16_t const *tud_descriptor_string_cb(uint8_t index, uint16_t langid) {
 		memcpy(&_desc_str[1], string_desc_arr_xinput[0], 2);
 		chr_count = 1;
 	} else {
-		// Convert ASCII string into UTF-16
+		/* Convert ASCII string into UTF-16 */
 		if (!(index < sizeof(string_desc_arr_xinput) / sizeof(string_desc_arr_xinput[0])))
 			return NULL;
 
 		const char *str = string_desc_arr_xinput[index];
 
-		// Cap at max char
+		/* Cap at max char */
 		chr_count = strlen(str);
 		if (chr_count > 31)
 			chr_count = 31;
@@ -75,7 +79,7 @@ uint16_t const *tud_descriptor_string_cb(uint8_t index, uint16_t langid) {
 		}
 	}
 
-	// first byte is length (including header), second byte is string type
+	/* first byte is length (including header), second byte is string type */
 	_desc_str[0] = (TUSB_DESC_STRING << 8) | (2 * chr_count + 2);
 
 	return _desc_str;

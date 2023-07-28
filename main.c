@@ -1,4 +1,3 @@
-/* #include <stdio.h> */
 #include <string.h>
 #include "pico/stdlib.h"
 #include "pico/multicore.h"
@@ -264,15 +263,6 @@ void core1_main(void)
 	bi_decl(bi_2pins_with_func(ICM20948_SDA, ICM20948_SCL, GPIO_FUNC_I2C));
 
 	icm20948_reset();
-
-	/* Read WHO_AM_I register (addr 0x00) */
-	uint8_t register_address = 0x00;
-	uint8_t buffer[1];
-
-	i2c_write_blocking(i2c_default, icm20948_address, &register_address, 1, true);
-	i2c_read_blocking(i2c_default, icm20948_address, buffer, 1, false);
-
-	printf("WHO_AM_I: 0x%02X\r\n", buffer[0]);
 
 	int16_t acceleration[3];
 

@@ -18,9 +18,6 @@ pico_sdk_init()
 add_executable(${APP_NAME}
 	${CMAKE_CURRENT_LIST_DIR}/main.c
 	${CMAKE_CURRENT_LIST_DIR}/usb_descriptors.c
-	# ${CMAKE_CURRENT_LIST_DIR}/xinput_driver.c
-	# ${CMAKE_CURRENT_LIST_DIR}/xinput_pad.c
-	# ${CMAKE_CURRENT_LIST_DIR}/tusb_driver.c
 	)
 
 target_include_directories(${APP_NAME} PUBLIC
@@ -40,11 +37,7 @@ target_link_libraries(${APP_NAME}
 # Get ALL the warnings!
 set_target_properties(${APP_NAME} PROPERTIES COMPILE_FLAGS "-Wall")
 
-# Set optimization to minimize size
-# target_compile_options(${APP_NAME} PRIVATE "-Os")
-# target_link_options(${APP_NAME} PRIVATE "-Os")
-
-# Enable USB, UART output
+# Disable USB, UART output
 pico_enable_stdio_usb(${APP_NAME} 0)
 pico_enable_stdio_uart(${APP_NAME} 0)
 
